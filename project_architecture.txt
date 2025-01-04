@@ -1,0 +1,166 @@
+Architecture Diagram (Conceptual)
+
+         +-------------+           
+         |   iOS App   |    <-- Swift (UIKit or SwiftUI)
+         +------+------+          
+                | (HTTPS)         
+                v                
+       +------------------+       
+       | Node.js Backend  |   <-- Express or Nest.js
+       | (RESTful API)    |       
+       +--------+---------+       
+                |                
+           +-----+-------+       
+           |  Database   |   <-- MongoDB / PostgreSQL
+           | (NoSQL/SQL) |       
+           +-------------+
+Backend:
+
+Node.js + Express
+Node.js is a JavaScript runtime that’s lightweight, event-driven, and easily scalable.
+Express is a minimal, flexible framework for building web applications and RESTful APIs.
+Database:
+
+MongoDB (NoSQL) with Mongoose
+MongoDB stores documents in a flexible JSON-like format (BSON), which pairs naturally with Node.js.
+Mongoose is an ODM (Object Data Modeling) library that simplifies schema definitions, queries, and relationships in MongoDB.
+Frontend (iOS):
+
+Swift with SwiftUI
+Swift is Apple’s modern, safe, and performant language for iOS development.
+SwiftUI is a declarative framework that makes building responsive, reactive UIs simpler than UIKit.
+Authentication:
+
+JWT (JSON Web Tokens)
+Stateless auth with tokens stored on the client (iOS app).
+Simplifies horizontal scaling since the server doesn’t need to store session data.
+Deployment (example options):
+
+Backend on Heroku, Render, or AWS (Elastic Beanstalk).
+Database on MongoDB Atlas or AWS DocumentDB.
+iOS App distributed via TestFlight for beta, then the App Store for production.
+
+Project Structure:
+
+src/
+├── config/             # Configuration files (database, etc.)
+│   └── db.js
+├── constants/          # Define constant values
+│   └── index.js
+├── controllers/        # Handles incoming requests and responses
+│   ├── authController.js
+│   └── bookingController.js
+├── middleware/         # Handles request processing (authentication, validation)
+│   ├── authMiddleware.js
+│   └── validationMiddleware.js
+├── models/             # Defines data structures and interacts with the database
+│   ├── User.js
+│   └── Slot.js
+├── routes/             # Defines API endpoints
+│   ├── authRoutes.js
+│   └── bookingRoutes.js
+├── services/           # Business logic and data manipulation
+│   ├── authService.js
+│   └── bookingService.js
+├── utils/              # Utility functions
+│   └── apiResponse.js
+└── index.js            # Entry point of the application
+
+3. High-Level Implementation Steps
+3.1. Backend: Node.js + Express + MongoDB
+Project Setup
+
+bash
+Copy code
+mkdir football-booking-backend
+cd football-booking-backend
+npm init -y
+npm install express mongoose jsonwebtoken bcrypt cors dotenv
+Express for REST endpoints
+Mongoose for interacting with MongoDB
+jsonwebtoken for JWT auth
+bcrypt for password hashing
+cors for cross-origin requests (allow the iOS app to connect)
+dotenv for environment variables (DB URL, JWT secret)
+Folder Structure (Example)
+
+
+User.js
+js
+Copy code
+
+const mongoose = require('mongoose');
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+module.exports = mongoose.model('User', userSchema);
+Slot.js
+js
+Copy code
+const mongoose = require('mongoose');
+const slotSchema = new mongoose.Schema({
+  date: { type: Date, required: true },
+  time: { type: String, required: true },
+  capacity: { type: Number, required: true },
+  bookedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+});
+module.exports = mongoose.model('Slot', slotSchema);
+Authentication & Booking Logic
+
+authController handles register/login (password hashing with bcrypt, token creation with jsonwebtoken).
+bookingController enforces the “one active booking” rule, updates capacity, etc.
+Routes
+
+authRoutes.js
+POST /register, POST /login
+bookingRoutes.js
+GET /slots (list all or upcoming)
+POST /slots/:id/book
+POST /slots/:id/cancel
+Attach these routes in index.js with app.use('/api/auth', authRoutes); and app.use('/api/bookings', bookingRoutes);
+3.2. Frontend: iOS (SwiftUI)
+Project Setup
+
+Open Xcode → “Create a new Xcode project” → Swift, SwiftUI.
+Recommended: Put it in a folder named football-booking-ios (sibling to football-booking-backend).
+Networking
+
+You can use URLSession or Alamofire for simplicity.
+Create an APIClient struct/class to handle requests (login, get slots, etc.).
+Example SwiftUI Flow
+
+LoginView:
+User inputs email/password.
+On tap “Login,” call POST /api/auth/login, store token in Keychain.
+SlotListView:
+Fetch GET /api/bookings/slots, display in a list.
+On tap “Book,” call POST /api/bookings/slots/:id/book, then reload.
+MyBookingsView (optional):
+Show user’s booked slots (GET /api/bookings/my-bookings if implemented).
+Cancel with POST /api/bookings/slots/:id/cancel.
+State Management
+
+SwiftUI: Use @State, @ObservedObject, or @EnvironmentObject to track session data and booking states.
+Store the token in memory or Keychain for re-authentication.
+4. Deployment
+Node.js Backend
+
+Deploy to Heroku, Render, or an AWS instance.
+Set environment variables (e.g., MONGO_URI, JWT_SECRET).
+For example, on Heroku:
+bash
+Copy code
+heroku create
+git push heroku main
+heroku config:set MONGO_URI=...
+heroku config:set JWT_SECRET=...
+MongoDB
+
+Use MongoDB Atlas.
+Create a cluster, get the connection string, put it in .env as MONGO_URI=....
+iOS App
+
+TestFlight for beta testing.
+Publish to the App Store once tested and approved.

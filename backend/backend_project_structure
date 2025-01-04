@@ -1,0 +1,23 @@
+src/
+├── config/             # Configuration files (database, etc.)
+│   └── db.js
+├── constants/          # Define constant values
+│   └── index.js
+├── controllers/        # Handles incoming requests and responses
+│   ├── authController.js
+│   └── bookingController.js
+├── middleware/         # Handles request processing (authentication, validation)
+│   ├── authMiddleware.js
+│   └── validationMiddleware.js
+├── models/             # Defines data structures and interacts with the database
+│   ├── User.js
+│   └── Slot.js
+├── routes/             # Defines API endpoints
+│   ├── authRoutes.js
+│   └── bookingRoutes.js
+├── services/           # Business logic and data manipulation
+│   ├── authService.js
+│   └── bookingService.js
+├── utils/              # Utility functions
+│   └── apiResponse.js
+└── index.js            # Entry point of the application
