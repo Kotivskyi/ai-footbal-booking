@@ -3,8 +3,11 @@
 The backend is structured into several key components, each with specific responsibilities:
 
 ### 2.1. Configuration (`config/`)
-
-*   **`db.js`**: Handles the connection to the MongoDB database using Mongoose. It manages connection events and exports the database connection.
+✅ Implemented
+*   **`db.js`**: Handles MongoDB database connection using Mongoose:
+    - Configures connection with proper options (useNewUrlParser, useUnifiedTopology)
+    - Handles connection events and errors
+    - Exports reusable database connection function
 
 ### 2.2. Constants (`constants/`)
 
@@ -33,30 +36,22 @@ Middleware functions are executed during the request-response cycle and handle t
     *   Handles validation of request bodies and parameters. Can be implemented using libraries like `express-validator` to define validation schemas for different routes (e.g., registration, booking).
 
 ### 2.5. Models (`models/`)
+✅ Implemented
 
 Models define the structure of the data stored in the database and provide an interface for interacting with the database.
 
-*   **`User.js`**:
-    ```javascript
-    const mongoose = require('mongoose');
-    const userSchema = new mongoose.Schema({
-      email: { type: String, required: true, unique: true },
-      password: { type: String, required: true },
-      createdAt: { type: Date, default: Date.now }
-    });
-    module.exports = mongoose.model('User', userSchema);
-    ```
-*   **`Slot.js`**:
-    ```javascript
-    const mongoose = require('mongoose');
-    const slotSchema = new mongoose.Schema({
-      date: { type: Date, required: true },
-      time: { type: String, required: true },
-      capacity: { type: Number, required: true },
-      bookedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
-    });
-    module.exports = mongoose.model('Slot', slotSchema);
-    ```
+*   **User Model**:
+    *   `email` (String, required, unique, indexed): User's email address for login
+    *   `password` (String, required, min length 6): Password for authentication
+    *   `createdAt` (Date, auto-generated): Timestamp of user registration
+    *   Includes email format validation and uniqueness constraint
+
+*   **Slot Model**:
+    *   `date` (Date, required): Date of the football slot
+    *   `time` (String, required): Time of the football slot
+    *   `capacity` (Number, required, min 1): Maximum number of players
+    *   `bookedBy` ([ObjectId], ref: 'User'): Array of user IDs who have booked
+    *   Includes compound index on date+time and index on bookedBy
 
 ### 2.6. Routes (`routes/`)
 
@@ -106,67 +101,65 @@ Services contain the core business logic of the application. They are called by 
 
 Utility functions provide reusable helper functions for common tasks.
 
-*   **`apiResponse.js`**: A utility function or class to create consistent and structured API responses, including status codes, messages, and data.
-
-### 2.9. Entry Point (`index.js`)
-
-*   The main entry point of the application. It initializes the Express app, connects to the database, sets up middleware, and mounts the routes.
-
-    ```javascript
-    const express = require('express');
-    const mongoose = require('mongoose');
-    const cors = require('cors');
-    require('dotenv').config();
-    const authRoutes = require('./routes/authRoutes');
-    const bookingRoutes = require('./routes/bookingRoutes');
-
-    const app = express();
-    const PORT = process.env.PORT || 5000;
-
-    // Middleware
-    app.use(cors());
-    app.use(express.json());
-
-    // Routes
-    app.use('/api/auth', authRoutes);
-    app.use('/api/bookings', bookingRoutes);
-
-    // Connect to MongoDB
-    mongoose.connect(process.env.MONGO_URI)
-      .then(() => console.log('MongoDB Connected'))
-      .catch(err => console.error('MongoDB Connection Error:', err));
-
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    ```
+### 2.8. Entry Point (`index.js`)
+⏳ In Progress
+*   Main application file that:
+    *   ✅ Initializes Express app
+    *   ⏳ Configures middleware (CORS, body-parser)
+    *   ✅ Database connection configuration ready
+    *   🔲 Routes mounting pending
 
 ## 3. Data Flow
 
-1. The iOS app sends an HTTP request to a specific backend endpoint.
-2. The request is received by the Express server and processed by relevant middleware (e.g., authentication, validation).
-3. The request is routed to the appropriate controller based on the endpoint.
-4. The controller calls the relevant service to handle the business logic.
-5. The service interacts with the MongoDB database through Mongoose models to retrieve or manipulate data.
-6. The service returns the result to the controller.
-7. The controller formats the response using the `apiResponse` utility and sends it back to the iOS app.
+1. Client request → Express server
+2. Request processing through middleware
+3. Route handler forwards to appropriate controller
+4. Controller calls relevant service
+5. Service performs business logic using models
+6. Response flows back through controller
+7. Standardized response sent to client
 
-## 4. Database Models (Detailed)
+## 4. Authentication Flow
 
-*   **User Model**:
-    *   `email` (String, required, unique): User's email address for login.
-    *   `password` (String, required): Hashed password for secure authentication.
-    *   `createdAt` (Date, default: Date.now): Timestamp of user registration.
-*   **Slot Model**:
-    *   `date` (Date, required): Date of the football slot.
-    *   `time` (String, required): Time of the football slot.
-    *   `capacity` (Number, required): Maximum number of players for the slot.
-    *   `bookedBy` ([ObjectId], ref: 'User'): Array of user IDs who have booked the slot.
+1. Registration:
+   - Service handles password hashing
+   - User data saved to database
+2. Login:
+   - Service verifies credentials
+   - JWT generated on success
+3. Protected Routes:
+   - Middleware verifies JWT
+   - User data attached to request
 
-## 5. Key Considerations
+## 5. Implementation Status
 
-*   **Authentication**: JWT-based authentication ensures stateless and scalable user sessions.
-*   **Authorization**: Middleware can be extended to handle role-based authorization if admin features are added later.
-*   **Data Validation**: Input validation is crucial to ensure data integrity and prevent errors.
-*   **Error Handling**: Consistent error responses provide a better developer experience for the frontend.
-*   **Scalability**: The stateless nature of the backend and the use of MongoDB allow for horizontal scaling.
+✅ Completed:
+- Database configuration
+- Model definitions with validation
+- Database indexes for performance
+- Basic project structure
 
-This architecture provides a solid foundation for building the football slot booking application, addressing the core requirements outlined in the user stories and project overview.
+⏳ In Progress:
+- Authentication implementation
+- Express app setup
+- Middleware configuration
+
+🔲 Pending:
+- Route implementation
+- Controller logic
+- Service layer
+- Testing setup
+
+## 6. Security Considerations
+
+1. Password Security:
+   - Hashing handled in auth service
+   - No password manipulation in models
+2. JWT Implementation:
+   - Tokens managed by auth service
+   - Verification in middleware
+3. Input Validation:
+   - Model-level data validation
+   - Request validation in middleware
+
+

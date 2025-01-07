@@ -14,10 +14,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'Backend is running!' });
 });
 
-// // Connect to MongoDB
-// mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log('MongoDB Connected'))
-//   .catch(err => console.error('MongoDB Connection Error:', err));
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB Connection Error:', err));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

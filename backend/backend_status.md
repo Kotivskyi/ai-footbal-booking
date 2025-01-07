@@ -5,27 +5,28 @@ This document outlines the plan for implementing the backend of the football slo
 ## Phase 1: Project Setup and Core Functionality (Estimated Time: 1 week)
 
 *   **Task 1.1: Set up the project environment (1 day)**
-    *   Initialize a new Node.js project (`npm init -y`).
-    *   Install core dependencies: `express`, `mongoose`, `cors`, `dotenv`.
-    *   Create basic directory structure (`src`, `config`, `constants`, etc.).
+    *   ✅ Initialize a new Node.js project (`npm init -y`).
+    *   ✅ Install core dependencies: `express`, `mongoose`, `cors`, `dotenv`.
+    *   ✅ Create basic directory structure (`src`, `config`, `constants`, etc.).
 *   **Task 1.2: Database Setup (1 day)**
-    *   Set up a MongoDB database (local or cloud).
-    *   Create `config/db.js` to connect to the database.
-    *   Define `User` and `Slot` models in `models/`.
+    *   ✅ Set up a MongoDB database (local configuration).
+    *   ✅ Create `config/db.js` to connect to the database.
+    *   ✅ Define `User` and `Slot` models in `models/`.
+    *   ✅ Add performance optimization (indexes).
 *   **Task 1.3: Implement User Authentication (3 days)**
-    *   Create `authController.js` and `authService.js`.
-    *   Implement user registration:
+    *   ⏳ Create `authController.js` and `authService.js`.
+    *   ⏳ Implement user registration:
         *   Define registration route in `authRoutes.js`.
         *   Implement registration logic in `authController` (handle request, call service).
         *   Implement `registerUser` in `authService` (validate input, hash password with `bcrypt`, save user).
-    *   Implement user login:
+    *   🔲 Implement user login:
         *   Define login route in `authRoutes.js`.
         *   Implement login logic in `authController`.
         *   Implement `loginUser` in `authService` (verify credentials, generate JWT with `jsonwebtoken`).
-    *   Create `authMiddleware.js` to protect routes.
+    *   🔲 Create `authMiddleware.js` to protect routes.
 *   **Task 1.4: Basic Slot Management (2 days)**
-    *   Create `bookingController.js` and `bookingService.js`.
-    *   Implement fetching available slots:
+    *   🔲 Create `bookingController.js` and `bookingService.js`.
+    *   🔲 Implement fetching available slots:
         *   Define route in `bookingRoutes.js`.
         *   Implement logic in `bookingController` to fetch slots.
         *   Implement `getAvailableSlots` in `bookingService` to query the database.
@@ -77,17 +78,22 @@ This document outlines the plan for implementing the backend of the football slo
 
 | Task | Status | Notes |
 |---|---|---|
-| Task 1.1 | To Do |  |
-| Task 1.2 | To Do |  |
-| Task 1.3 | To Do |  |
-| Task 1.4 | To Do |  |
-| Task 2.1 | To Do |  |
-| Task 2.2 | To Do |  |
-| Task 2.3 | To Do |  |
-| Task 3.1 | To Do |  |
-| Task 3.2 | To Do |  |
-| Task 3.3 | To Do |  |
-| Task 3.4 | To Do |  |
-| Task 3.5 | To Do |  |
+| Task 1.1 | ✅ Complete | Project structure and dependencies set up |
+| Task 1.2 | ✅ Complete | Database models and connection configured |
+| Task 1.3 | ⏳ In Progress | Starting authentication implementation |
+| Task 1.4 | 🔲 To Do |  |
+| Task 2.1 | 🔲 To Do |  |
+| Task 2.2 | 🔲 To Do |  |
+| Task 2.3 | 🔲 To Do |  |
+| Task 3.1 | 🔲 To Do |  |
+| Task 3.2 | 🔲 To Do |  |
+| Task 3.3 | 🔲 To Do |  |
+| Task 3.4 | 🔲 To Do |  |
+| Task 3.5 | 🔲 To Do |  |
+
+Legend:
+- ✅ Complete
+- ⏳ In Progress
+- 🔲 To Do
 
 This plan provides a roadmap for the backend implementation. The estimated times are subject to change based on progress and complexity. Regular reviews and updates to this plan are recommended.
