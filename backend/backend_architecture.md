@@ -5,7 +5,9 @@ The backend is structured into several key components, each with specific respon
 ### 2.1. Configuration (`config/`)
 ✅ Implemented
 *   **`db.js`**: Handles MongoDB database connection using Mongoose:
-    - Configures connection with proper options (useNewUrlParser, useUnifiedTopology)
+    - Configures connection with flexible options support
+    - Supports environment-specific configurations
+    - Handles test vs production settings
     - Handles connection events and errors
     - Exports reusable database connection function
 
@@ -135,9 +137,12 @@ Utility functions provide reusable helper functions for common tasks.
 
 ✅ Completed:
 - Database configuration
+- Configurable database connection options
 - Model definitions with validation
 - Database indexes for performance
 - Basic project structure
+- Unit test setup with Jest
+- Test-specific database configuration
 
 ⏳ In Progress:
 - Authentication implementation
@@ -148,7 +153,6 @@ Utility functions provide reusable helper functions for common tasks.
 - Route implementation
 - Controller logic
 - Service layer
-- Testing setup
 
 ## 6. Security Considerations
 
@@ -161,5 +165,58 @@ Utility functions provide reusable helper functions for common tasks.
 3. Input Validation:
    - Model-level data validation
    - Request validation in middleware
+
+## 7. Testing Strategy
+
+### Test Environment
+- Jest as test runner
+- MongoDB Memory Server for database testing
+- Environment-specific configuration through dotenv
+- Configurable test timeouts and options
+
+### Test Categories
+1. **Unit Tests**
+   - Model validation and relationships
+   - Database connection handling with custom timeouts
+   - Connection error scenarios with fast failures
+   - Utility functions
+   - Controller request handling
+   - Middleware token verification
+   - Response formatting
+
+2. **Integration Tests** (Planned)
+   - API endpoints
+   - Authentication flow
+   - Booking operations
+   - Route protection
+   - Middleware chains
+
+3. **Test Coverage**
+   - Track with Jest coverage reports
+   - Run with: `npm run test:coverage`
+
+### Test Commands
+```bash
+npm test           # Run all tests
+npm run test:watch # Development mode with auto-rerun
+```
+
+### Test Organization
+```
+src/
+└── tests/
+    ├── config/
+    │   └── db.test.js          # Database connection tests
+    ├── models/
+    │   └── models.test.js      # Model validation tests
+    ├── auth/
+    │   └── authController.test.js
+    ├── middleware/
+    │   └── authMiddleware.test.js
+    ├── routes/
+    │   └── authRoutes.test.js
+    └── utils/
+        └── apiResponse.test.js
+```
 
 

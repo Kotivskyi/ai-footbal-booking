@@ -2,6 +2,9 @@
 
 This document outlines the **User Stories** and **Acceptance Criteria** for the core MVP of a football slot booking application. It also includes an **Improvements List** for future enhancements.
 
+
+
+
 ---
 
 ## User Stories for Primary Stakeholders (Players)
