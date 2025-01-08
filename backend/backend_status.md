@@ -30,6 +30,27 @@ This document outlines the plan for implementing the backend of the football slo
         *   Define route in `bookingRoutes.js`.
         *   Implement logic in `bookingController` to fetch slots.
         *   Implement `getAvailableSlots` in `bookingService` to query the database.
+*   **Task 1.5: Integration Testing Setup (5 days)**
+        *   Set up test environment:
+            *   Refector testing directory structure according to Test Architecture of @backend_architecture.md
+            *   Configure MongoDB Memory Server for test database
+            *   Set up test environment configurations
+        *   Implement test utilities:
+            *   Database helpers for test data management
+            *   HTTP request helpers using Supertest
+            *   Test fixtures for users and slots
+        *   Implement auth flow integration tests:
+            *   ⏳ Registration tests (success/failure cases)
+            *   ⏳ Login tests with token verification
+            *   🔲 Protected routes authentication tests
+        *   Implement booking flow tests:
+            *   🔲 Slot listing and filtering tests
+            *   🔲 Booking creation and validation tests
+            *   🔲 Booking management operation tests
+        *   Implement error handling tests:
+            *   🔲 Input validation scenarios
+            *   �� Authorization edge cases
+            *   🔲 Concurrent operation handling
 
 ## Phase 2: Booking Functionality (Estimated Time: 1 week)
 
@@ -88,7 +109,8 @@ This document outlines the plan for implementing the backend of the football slo
 | Task 1.1 | ✅ Complete | Project structure and dependencies set up |
 | Task 1.2 | ✅ Complete | Database models and connection configured |
 | Task 1.3 | ✅ Complete | Authentication system implemented with tests |
-| Task 1.4 | 🔲 To Do |  |
+| Task 1.4 | 🔲 To Do | Basic slot management implementation |
+| Task 1.5 | 🔲 To Do | Integration tests setup and implementation |
 | Task 2.1 | 🔲 To Do |  |
 | Task 2.2 | 🔲 To Do |  |
 | Task 2.3 | 🔲 To Do |  |

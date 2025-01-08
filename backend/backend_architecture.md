@@ -206,21 +206,52 @@ Utility functions provide reusable helper functions for common tasks.
 ✅ Environment-specific test configuration
 ✅ Custom test timeouts and options
 
-### Test Categories
-1. **Unit Tests**
-    - ✅ Model validation tests
-    - ✅ Database connection tests
-    - ✅ Auth service tests
-    - ✅ Controller tests
-    - ✅ Middleware tests
-    - ⏳ Utility function tests
+### Test Architecture
 
-2. **Integration Tests** (Planned)
-    - ✅ Auth endpoints tested
-    - ✅ Authentication flow tested
-    - 🔲 Booking operations pending
-    - ✅ Route protection tested
-    - ✅ Middleware chain tests
+1. **Unit Tests**
+    - Test individual components in isolation
+    - Mock dependencies and external services
+    - Focus on business logic and edge cases
+    - Components:
+        - ✅ Model validation tests
+        - ✅ Service layer tests
+        - ✅ Controller logic tests
+        - ✅ Utility function tests
+        - ✅ Middleware tests
+
+2. **Integration Tests**
+    - Test component interactions and data flow
+    - Components:
+        ```
+        tests/
+        ├── unit/
+        │   ├── models/
+        │   ├── services/
+        │   └── controllers/
+        └── integration/
+            ├── setup/
+            │   ├── setup.js         # Global test setup
+            │   └── teardown.js      # Global test cleanup
+            ├── fixtures/
+            │   ├── users.js         # Test data
+            │   └── slots.js         # Test data
+            ├── helpers/
+            │   ├── database.js      # DB utilities
+            │   └── request.js       # API request utilities
+            └── features/
+                ├── auth/
+                │   ├── register.test.js
+                │   └── login.test.js
+                └── booking/
+                    ├── create.test.js
+                    └── cancel.test.js
+        ```
+    - Key Components:
+        - Test Runner (Jest)
+        - HTTP Client (Supertest)
+        - Test Database (MongoDB Memory Server)
+        - Assertion Library
+        - Setup/Teardown Scripts
 
 3. **Test Coverage**
     - Track with Jest coverage reports
@@ -228,26 +259,10 @@ Utility functions provide reusable helper functions for common tasks.
 
 ### Test Commands
 ```bash
-npm test           # Run all tests
-npm run test:watch # Development mode with auto-rerun
-```
-
-### Test Organization
-```
-src/
-└── tests/
-    ├── config/
-    │   └── db.test.js          # Database connection tests
-    ├── models/
-    │   └── models.test.js      # Model validation tests
-    ├── auth/
-    │   └── authController.test.js
-    ├── middleware/
-    │   └── authMiddleware.test.js
-    ├── routes/
-    │   └── authRoutes.test.js
-    └── utils/
-        └── apiResponse.test.js
+npm test              # Run all tests
+npm run test:unit     # Run unit tests only
+npm run test:int      # Run integration tests only
+npm run test:coverage # Generate coverage report
 ```
 
 
