@@ -13,11 +13,11 @@
         *   `hasActiveBooking(userId)`: Checks for existing active bookings.
 *   **Tasks:**
     *   `authService`:
-        *   Validate user input during registration.
-        *   Hash passwords using `bcrypt`.
-        *   Create new user documents in the database.
-        *   Verify user credentials during login.
-        *   Generate JWTs using `jsonwebtoken`.
+        *   ✅ Validate user input during registration.
+        *   ✅ Hash passwords using `bcrypt`.
+        *   ✅ Create new user documents in the database.
+        *   ✅ Verify user credentials during login.
+        *   ✅ Generate JWTs using `jsonwebtoken`.
     *   `bookingService`:
         *   Query the database for available slots, filtering by date, time, and capacity.
         *   Check slot availability and user's existing bookings before booking.
@@ -40,3 +40,7 @@ authService.registerUser('test@test.com', 'password123')
   .then(() => console.log('✅ Registration test passed'))
   .catch(err => console.error('❌ Registration test failed:', err));"
 ```
+
+**Implementation Status:**
+- ✅ Auth Service: Complete with tests
+- 🔲 Booking Service: Not started

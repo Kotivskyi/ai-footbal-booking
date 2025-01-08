@@ -8,14 +8,14 @@
         *   Validates request bodies and parameters using a library like `express-validator`.
 *   **Tasks:**
     *   `authMiddleware`:
-        *   Verify the JWT token in the `Authorization` header.
-        *   Decode the token to extract user information.
-        *   Attach the user object to the request for use in controllers.
-        *   Return an error response if authentication fails.
+        *   ✅ Verify the JWT token in the `Authorization` header.
+        *   ✅ Decode the token to extract user information.
+        *   ✅ Attach the user object to the request.
+        *   ✅ Return error response if authentication fails.
     *   `validationMiddleware`:
-        *   Define validation schemas for different routes (e.g., registration, login, booking).
-        *   Validate request data against the schemas.
-        *   Return an error response if validation fails.
+        *   ⏳ Define validation schemas for different routes.
+        *   ⏳ Validate request data against the schemas.
+        *   ⏳ Return an error response if validation fails.
 
 **Testing Strategy:**
 - Unit tests for token verification
@@ -23,3 +23,7 @@
 - Test validation rules
 - Mock request/response objects
 - Run with: `npm test`
+
+**Implementation Status:**
+- ✅ Auth Middleware: Complete with tests
+- ⏳ Validation Middleware: In progress

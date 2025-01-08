@@ -5,11 +5,12 @@
     *   `authRoutes.js`: Defines routes for user registration and login.
     *   `bookingRoutes.js`: Defines routes for slot management and booking operations.
 *   **Tasks:**
-    *   Create Express Router instances.
-    *   Define routes for each API endpoint (e.g., `/api/auth/register`, `/api/bookings/slots`).
-    *   Map routes to the appropriate controller actions.
-    *   Apply middleware (e.g., `authMiddleware`) to protected routes.
-    *   Export the router instances for use in the main application file.
+    *   ✅ Create Express Router instances.
+    *   ✅ Define auth routes (`/api/auth/register`, `/api/auth/login`).
+    *   🔲 Define booking routes (`/api/bookings/*`).
+    *   ✅ Map auth routes to controller actions.
+    *   ✅ Apply auth middleware to protected routes.
+    *   ✅ Export router instances.
 
 **Testing Strategy:**
 - Integration tests for endpoints
@@ -17,3 +18,7 @@
 - Verify middleware chain
 - Test request handling
 - Run with: `npm test`
+
+**Implementation Status:**
+- ✅ Auth Routes: Complete with tests
+- 🔲 Booking Routes: Not started

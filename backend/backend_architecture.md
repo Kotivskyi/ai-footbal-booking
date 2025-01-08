@@ -10,6 +10,10 @@ The backend is structured into several key components, each with specific respon
     - Handles test vs production settings
     - Handles connection events and errors
     - Exports reusable database connection function
+*   **`mongoConfig.js`**: Manages MongoDB connection options:
+    - Environment-specific configurations
+    - Connection pooling settings
+    - Timeout configurations
 
 ### 2.2. Constants (`constants/`)
 
@@ -20,8 +24,14 @@ The backend is structured into several key components, each with specific respon
 Controllers handle incoming HTTP requests, orchestrate the necessary business logic by calling services, and return responses to the client.
 
 *   **`authController.js`**:
-    *   `register(req, res)`: Handles user registration requests. Receives user credentials, calls the `authService` to create a new user, and sends a success or error response.
-    *   `login(req, res)`: Handles user login requests. Receives user credentials, calls the `authService` to authenticate the user and generate a JWT, and sends the token in the response.
+    *   ✅ `register(req, res)`: Handles user registration requests
+        - Validates registration data
+        - Calls authService.registerUser
+        - Returns 201 on success, appropriate error codes on failure
+    *   ✅ `login(req, res)`: Handles user login requests
+        - Validates login credentials
+        - Calls authService.loginUser
+        - Returns JWT token and user details on success
 *   **`bookingController.js`**:
     *   `getAllSlots(req, res)`: Retrieves a list of available football slots. Calls the `bookingService` to fetch and filter slots based on criteria (e.g., upcoming).
     *   `bookSlot(req, res)`: Handles requests to book a specific slot. Extracts the slot ID and user information, calls the `bookingService` to perform the booking, and sends a confirmation or error response. Enforces the "one active booking" rule.
@@ -33,7 +43,11 @@ Controllers handle incoming HTTP requests, orchestrate the necessary business lo
 Middleware functions are executed during the request-response cycle and handle tasks like authentication, authorization, and input validation.
 
 *   **`authMiddleware.js`**:
-    *   `authenticate(req, res, next)`: Verifies the JWT token from the request headers. If the token is valid, it attaches the user information to the request object; otherwise, it returns an authentication error.
+    *   ✅ `authenticate(req, res, next)`: JWT token verification
+        - Extracts token from Authorization header
+        - Verifies token validity
+        - Attaches user data to request
+        - Handles authentication errors
 *   **`validationMiddleware.js`**:
     *   Handles validation of request bodies and parameters. Can be implemented using libraries like `express-validator` to define validation schemas for different routes (e.g., registration, booking).
 
@@ -43,17 +57,27 @@ Middleware functions are executed during the request-response cycle and handle t
 Models define the structure of the data stored in the database and provide an interface for interacting with the database.
 
 *   **User Model**:
-    *   `email` (String, required, unique, indexed): User's email address for login
-    *   `password` (String, required, min length 6): Password for authentication
-    *   `createdAt` (Date, auto-generated): Timestamp of user registration
-    *   Includes email format validation and uniqueness constraint
+    *   ✅ Schema Definition:
+        - `email`: String, required, unique, indexed, validated
+        - `password`: String, required, min length 6, hashed
+        - `createdAt`: Date, auto-generated
+    *   ✅ Indexes:
+        - Email index for faster lookups
+    *   ✅ Validations:
+        - Email format validation
+        - Password length validation
 
 *   **Slot Model**:
-    *   `date` (Date, required): Date of the football slot
-    *   `time` (String, required): Time of the football slot
-    *   `capacity` (Number, required, min 1): Maximum number of players
-    *   `bookedBy` ([ObjectId], ref: 'User'): Array of user IDs who have booked
-    *   Includes compound index on date+time and index on bookedBy
+    *   ✅ Schema Definition:
+        - `date`: Date, required
+        - `time`: String, required
+        - `capacity`: Number, required, min 1
+        - `bookedBy`: [ObjectId] with User reference
+    *   ✅ Indexes:
+        - Compound index on date+time
+        - Index on bookedBy
+    *   ✅ Validations:
+        - Capacity validation
 
 ### 2.6. Routes (`routes/`)
 
@@ -90,14 +114,18 @@ Route definitions specify the API endpoints and map them to the corresponding co
 Services contain the core business logic of the application. They are called by controllers and interact with the models to perform data operations.
 
 *   **`authService.js`**:
-    *   `registerUser(email, password)`: Creates a new user in the database after validating the input and securely hashing the password using `bcrypt`.
-    *   `loginUser(email, password)`: Authenticates a user by verifying the provided email and password against the stored credentials. Upon successful authentication, generates a JWT using `jsonwebtoken`.
-*   **`bookingService.js`**:
-    *   `getAvailableSlots()`: Fetches a list of upcoming football slots from the database. Can include filtering logic to exclude past or full slots.
-    *   `bookSlot(slotId, userId)`: Handles the logic for booking a slot for a user. It checks if the slot is available (capacity > number of `bookedBy`), if the user has an existing booking, and then updates the `Slot` document by adding the user's ID to the `bookedBy` array. Decrements the capacity (implicitly or explicitly depending on implementation).
-    *   `cancelBooking(slotId, userId)`: Handles the logic for canceling a user's booking. Removes the user's ID from the `bookedBy` array of the `Slot` document.
-    *   `getUserBookings(userId)`: Retrieves a list of slots that have been booked by a specific user.
-    *   `hasActiveBooking(userId)`: Checks if a user has any upcoming, booked slots to enforce the single booking limit.
+    *   ✅ `registerUser(email, password)`: User registration
+        - Checks for existing users
+        - Hashes passwords with bcrypt
+        - Creates new user records
+    *   ✅ `loginUser(email, password)`: User authentication
+        - Verifies credentials
+        - Generates JWT tokens
+        - Returns user data
+*   **`bookingService.js`**: Handles business logic for slot management and booking operations
+    - Slot availability checks
+    - Booking creation and cancellation
+    - User booking retrieval
 
 ### 2.8. Utilities (`utils/`)
 
@@ -157,43 +185,46 @@ Utility functions provide reusable helper functions for common tasks.
 ## 6. Security Considerations
 
 1. Password Security:
-   - Hashing handled in auth service
-   - No password manipulation in models
+    - ✅ Password hashing with bcrypt
+    - ✅ Secure password storage
+    - ✅ No plain text passwords
 2. JWT Implementation:
-   - Tokens managed by auth service
-   - Verification in middleware
+    - ✅ JWT generation in auth service
+    - ✅ Token verification in middleware
+    - ✅ Secure token handling
 3. Input Validation:
-   - Model-level data validation
-   - Request validation in middleware
+    - ✅ Model-level validation implemented
+    - ⏳ Request validation in progress
+    - 🔲 Booking validation pending
 
 ## 7. Testing Strategy
 
 ### Test Environment
-- Jest as test runner
-- MongoDB Memory Server for database testing
-- Environment-specific configuration through dotenv
-- Configurable test timeouts and options
+
+✅ Jest configured as test runner
+✅ MongoDB Memory Server for isolated testing
+✅ Environment-specific test configuration
+✅ Custom test timeouts and options
 
 ### Test Categories
 1. **Unit Tests**
-   - Model validation and relationships
-   - Database connection handling with custom timeouts
-   - Connection error scenarios with fast failures
-   - Utility functions
-   - Controller request handling
-   - Middleware token verification
-   - Response formatting
+    - ✅ Model validation tests
+    - ✅ Database connection tests
+    - ✅ Auth service tests
+    - ✅ Controller tests
+    - ✅ Middleware tests
+    - ⏳ Utility function tests
 
 2. **Integration Tests** (Planned)
-   - API endpoints
-   - Authentication flow
-   - Booking operations
-   - Route protection
-   - Middleware chains
+    - ✅ Auth endpoints tested
+    - ✅ Authentication flow tested
+    - 🔲 Booking operations pending
+    - ✅ Route protection tested
+    - ✅ Middleware chain tests
 
 3. **Test Coverage**
-   - Track with Jest coverage reports
-   - Run with: `npm run test:coverage`
+    - Track with Jest coverage reports
+    - Run with: `npm run test:coverage`
 
 ### Test Commands
 ```bash
