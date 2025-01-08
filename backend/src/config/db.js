@@ -1,19 +1,26 @@
 const mongoose = require('mongoose');
+const MongoConfig = require('./mongoConfig');
 
-const connectDB = async (options = {}) => {
+let conn = null;
+
+const connectDB = async () => {
     try {
-        // If already connected and URI changed, disconnect first
-        if (mongoose.connection.readyState === 1 && 
-            mongoose.connection._connectionString !== process.env.MONGODB_URI) {
-            await mongoose.disconnect();
+        if (conn && mongoose.connection.readyState === 1) {
+            console.log('Using existing connection');
+            return conn;
         }
 
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            // MongoDB Node.js Driver 4.0+ automatically uses new topology engine
-            ...options // Allow passing test-specific options
-        });
+        if (!process.env.MONGODB_URI) {
+            throw new Error('MONGODB_URI is not defined');
+        }
 
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        const config = new MongoConfig(process.env.NODE_ENV);
+        conn = await mongoose.connect(
+            process.env.MONGODB_URI, 
+            config.getConnectionOptions()
+        );
+
+        console.log(`MongoDB Connected: ${mongoose.connection.host}`);
         return conn;
     } catch (error) {
         console.error(`Error: ${error.message}`);
@@ -21,4 +28,4 @@ const connectDB = async (options = {}) => {
     }
 };
 
-module.exports = connectDB;
+module.exports = connectDB; 
