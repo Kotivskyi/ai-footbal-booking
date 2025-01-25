@@ -1,0 +1,23 @@
+# Swift Specific Rules
+
+## 1. State Management
+
+- Use appropriate property wrappers and macros:
+  - Annotate view models with `@Observable`, e.g., `@Observable final class MyModel`.
+  - Do not use `@State` in the SwiftUI View for view model observation. Instead, use `let model: MyModel`.
+  - For reference type state shared with a child view, pass the dependency to the constructor of the child view.
+  - For value type state shared with a child view, use SwiftUI bindings if and only if the child needs write access to the state.
+  - For value type state shared with a child view, pass the value if the child view only needs read access to the state.
+  - Use `@Environment` for state that should be shared throughout the entire app, or large pieces of the app.
+  - Use `@State` only for local state that is managed by the view itself.
+
+## 2. Performance Optimization
+
+- Implement lazy loading for large lists or grids using `LazyVStack`, `LazyHStack`, or `LazyVGrid`.
+- Optimize `ForEach` loops by using stable identifiers.
+
+## 5. SwiftUI Lifecycle
+
+- Use `@main` and `App` protocol for the app's entry point.
+- Implement `Scene`s for managing app structure.
+- Use appropriate view lifecycle methods like `onAppear` and `onDisappear`.

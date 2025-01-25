@@ -20,8 +20,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Add index on email field for faster lookups
-userSchema.index({ email: 1 });
 
 const User = mongoose.model('User', userSchema);
 

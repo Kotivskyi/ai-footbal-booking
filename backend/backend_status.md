@@ -25,11 +25,12 @@ This document outlines the plan for implementing the backend of the football slo
         *   ✅ Implement `loginUser` in `authService` (verify credentials, generate JWT with `jsonwebtoken`).
     *   ✅ Create `authMiddleware.js` to protect routes.
 *   **Task 1.4: Basic Slot Management (2 days)**
-    *   🔲 Create `bookingController.js` and `bookingService.js`.
-    *   🔲 Implement fetching available slots:
-        *   Define route in `bookingRoutes.js`.
-        *   Implement logic in `bookingController` to fetch slots.
-        *   Implement `getAvailableSlots` in `bookingService` to query the database.
+    *   ✅ Create `bookingController.js` and `bookingService.js`.
+    *   ✅ Implement fetching available slots:
+        *   ✅ Define route in `bookingRoutes.js`
+        *   ✅ Implement logic in `bookingController` to fetch slots
+        *   ✅ Implement `getAvailableSlots` in `bookingService` using MongoDB aggregation
+    *   ✅ Add unit tests for booking functionality
 *   **Task 1.5: Integration Testing Setup (5 days)**
         *   Set up test environment:
             *   Refector testing directory structure according to Test Architecture of @backend_architecture.md
@@ -109,14 +110,14 @@ This document outlines the plan for implementing the backend of the football slo
 | Task 1.1 | ✅ Complete | Project structure and dependencies set up |
 | Task 1.2 | ✅ Complete | Database models and connection configured |
 | Task 1.3 | ✅ Complete | Authentication system implemented with tests |
-| Task 1.4 | 🔲 To Do | Basic slot management implementation |
+| Task 1.4 | ✅ Complete | Basic slot management implemented with tests |
 | Task 1.5 | 🔲 To Do | Integration tests setup and implementation |
 | Task 2.1 | 🔲 To Do |  |
 | Task 2.2 | 🔲 To Do |  |
 | Task 2.3 | 🔲 To Do |  |
 | Task 3.1 | ⏳ In Progress | Model validation complete, request validation in progress |
 | Task 3.2 | ⏳ In Progress | Error handling implemented for auth |
-| Task 3.3 | ⏳ In Progress | Auth tests complete, booking tests pending |
+| Task 3.3 | ✅ Complete | Auth and booking tests implemented |
 | Task 3.4 | ⏳ In Progress | Auth documentation complete |
 | Task 3.5 | ⏳ In Progress | Database optimizations complete |
 

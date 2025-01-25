@@ -4,10 +4,7 @@ class MongoConfig {
     }
 
     getConnectionOptions() {
-        const baseOptions = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        };
+        const baseOptions = {};
 
         const envOptions = {
             development: {
@@ -34,4 +31,4 @@ class MongoConfig {
     }
 }
 
-module.exports = MongoConfig; 
+module.exports = MongoConfig;
