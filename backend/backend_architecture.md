@@ -1,3 +1,31 @@
+# Backend Architecture
+
+## 1. Project Structure
+
+src/
+├── config/             # Configuration files (database, etc.)
+│   └── db.js
+├── constants/          # Define constant values
+│   └── index.js
+├── controllers/        # Handles incoming requests and responses
+│   ├── authController.js
+│   └── bookingController.js
+├── middleware/         # Handles request processing (authentication, validation)
+│   ├── authMiddleware.js
+│   └── validationMiddleware.js
+├── models/             # Defines data structures and interacts with the database
+│   ├── User.js
+│   └── Slot.js
+├── routes/             # Defines API endpoints
+│   ├── authRoutes.js
+│   └── bookingRoutes.js
+├── services/           # Business logic and data manipulation
+│   ├── authService.js
+│   └── bookingService.js
+├── utils/              # Utility functions
+│   └── apiResponse.js
+└── index.js            # Entry point of the application
+
 ## 2. Components
 
 The backend is structured into several key components, each with specific responsibilities:
@@ -33,10 +61,18 @@ Controllers handle incoming HTTP requests, orchestrate the necessary business lo
         - Calls authService.loginUser
         - Returns JWT token and user details on success
 *   **`bookingController.js`**:
-    *   `getAllSlots(req, res)`: Retrieves a list of available football slots. Calls the `bookingService` to fetch and filter slots based on criteria (e.g., upcoming).
-    *   `bookSlot(req, res)`: Handles requests to book a specific slot. Extracts the slot ID and user information, calls the `bookingService` to perform the booking, and sends a confirmation or error response. Enforces the "one active booking" rule.
-    *   `cancelBooking(req, res)`: Handles requests to cancel a booking. Extracts the slot ID and user information, calls the `bookingService` to cancel the booking, and sends a confirmation response.
-    *   `getMyBookings(req, res)`: Retrieves the list of bookings for the currently logged-in user. Calls the `bookingService` to fetch the user's bookings.
+    *   ✅ `getAllSlots(req, res)`: Retrieves available football slots
+        - Calls bookingService.getAvailableSlots
+        - Returns filtered slots with status codes
+    *   🔲 `bookSlot(req, res)`: Handles slot booking
+        - Validates booking capacity
+        - Enforces one-booking rule
+    *   🔲 `cancelBooking(req, res)`: Handles cancellation
+        - Validates user ownership
+        - Updates slot availability
+    *   🔲 `getMyBookings(req, res)`: Gets user bookings
+        - Filters by booking status
+        - Implements pagination
 
 ### 2.4. Middleware (`middleware/`)
 
@@ -122,10 +158,20 @@ Services contain the core business logic of the application. They are called by 
         - Verifies credentials
         - Generates JWT tokens
         - Returns user data
-*   **`bookingService.js`**: Handles business logic for slot management and booking operations
-    - Slot availability checks
-    - Booking creation and cancellation
-    - User booking retrieval
+*   **`bookingService.js`**:
+    *   ✅ `getAvailableSlots()`: MongoDB aggregation for slots
+        - Filters by capacity and date
+        - Projects required fields
+        - Implements pagination
+    *   🔲 `bookSlot(userId, slotId)`: Creates booking
+        - Checks existing bookings
+        - Updates slot capacity
+    *   🔲 `cancelBooking(userId, slotId)`: Removes booking
+        - Validates user ownership
+        - Restores slot capacity
+    *   🔲 `getUserBookings(userId)`: Retrieves user bookings
+        - Populates slot details
+        - Filters by status
 
 ### 2.8. Utilities (`utils/`)
 
@@ -171,16 +217,15 @@ Utility functions provide reusable helper functions for common tasks.
 - Basic project structure
 - Unit test setup with Jest
 - Test-specific database configuration
-
-⏳ In Progress:
-- Authentication implementation
-- Express app setup
-- Middleware configuration
+- Basic slot management implementation
+- Slot availability checks via aggregation
+- Unit tests for slot fetching
+- Controller-service integration
 
 🔲 Pending:
-- Route implementation
-- Controller logic
-- Service layer
+- Booking creation/cancellation logic
+- User booking management
+- Admin endpoints implementation
 
 ## 6. Security Considerations
 
@@ -243,6 +288,7 @@ Utility functions provide reusable helper functions for common tasks.
                 │   ├── register.test.js
                 │   └── login.test.js
                 └── booking/
+                    ├── availability.test.js
                     ├── create.test.js
                     └── cancel.test.js
         ```
