@@ -1,6 +1,6 @@
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const Slot = require('../../models/Slot');
+const Slot = require('../../models/slot.model');
 const bookingService = require('../../services/bookingService');
 
 describe('Booking Service', () => {
@@ -28,6 +28,7 @@ describe('Booking Service', () => {
           date: new Date('2025-01-27'),
           time: '10:00',
           capacity: 20,
+          price: 50,
           bookedBy: new Array(5).fill(new mongoose.Types.ObjectId())
         },
         {

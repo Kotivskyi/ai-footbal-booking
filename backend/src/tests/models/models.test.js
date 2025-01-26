@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const User = require('../../models/User');
-const Slot = require('../../models/Slot');
+const User = require('../../models/user.model');
+const Slot = require('../../models/slot.model');
 
 describe('Models Validation', () => {
     let mongoServer;
@@ -57,7 +57,8 @@ describe('Models Validation', () => {
             const slot = new Slot({
                 date: new Date(),
                 time: '14:00',
-                capacity: 10
+                capacity: 10,
+                price: 50
             });
             await expect(slot.validate()).resolves.not.toThrow();
         });
@@ -73,6 +74,7 @@ describe('Models Validation', () => {
 
         it('should handle bookedBy references correctly', async () => {
             const user = new User({
+                name: 'Test User',
                 email: 'test@test.com',
                 password: 'password123'
             });

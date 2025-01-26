@@ -1,5 +1,5 @@
 const bookingService = require('../services/bookingService');
-const Slot = require('../models/Slot');
+const Slot = require('../models/slot.model');
 
 const getAllSlots = async (req, res) => {
   try {

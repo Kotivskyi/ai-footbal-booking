@@ -32,26 +32,74 @@ This document outlines the plan for implementing the backend of the football slo
         *   ✅ Implement `getAvailableSlots` in `bookingService` using MongoDB aggregation
     *   ✅ Add unit tests for booking functionality
 *   **Task 1.5: Integration Testing Setup (5 days)**
-        *   Set up test environment:
-            *   Refector testing directory structure according to Test Architecture of @backend_architecture.md
-            *   Configure MongoDB Memory Server for test database
-            *   Set up test environment configurations
-        *   Implement test utilities:
-            *   Database helpers for test data management
-            *   HTTP request helpers using Supertest
-            *   Test fixtures for users and slots
-        *   Implement auth flow integration tests:
-            *   ⏳ Registration tests (success/failure cases)
-            *   ⏳ Login tests with token verification
-            *   🔲 Protected routes authentication tests
-        *   Implement booking flow tests:
-            *   🔲 Slot listing and filtering tests
-            *   🔲 Booking creation and validation tests
-            *   🔲 Booking management operation tests
-        *   Implement error handling tests:
-            *   🔲 Input validation scenarios
-            *   �� Authorization edge cases
-            *   🔲 Concurrent operation handling
+        *   **1.5.1: Test Environment Setup (1 day)**
+            *   ✅ Install and configure Jest as test runner
+            *   ✅ Set up MongoDB Memory Server for isolated testing
+            *   ✅ Configure test-specific environment variables
+            *   ✅ Install Supertest for API endpoint testing
+            *   ✅ Set up custom test timeouts and options
+        *   **1.5.2: Test Directory Structure and Global Setup (1 day)**
+            *   ✅ Create test directory structure:
+                ```
+                tests/
+                ├── integration/
+                │   ├── setup/
+                │   ├── fixtures/
+                │   ├── helpers/
+                │   └── features/
+                └── unit/
+                ```
+            *   ✅ Implement global setup/teardown scripts:
+                *   `setup/setup.js`: Database connection, migrations
+                *   `setup/teardown.js`: Cleanup, connection closing
+        *   **1.5.3: Test Utilities and Fixtures (1 day)**
+            *   ✅ Create database helpers (`helpers/database.js`):
+                *   Database seeding utilities
+                *   Test data cleanup functions
+                *   Database connection management
+            *   ✅ Create request helpers (`helpers/request.js`):
+                *   Supertest wrapper for API requests
+                *   Authentication token handling
+                *   Common request patterns
+            *   ✅ Create test fixtures:
+                *   `fixtures/users.js`: Test user data
+                *   `fixtures/slots.js`: Test slot data
+        *   **1.5.4: Auth Feature Integration Tests (1 day)**
+            *   ✅ Registration flow tests (`features/auth/register.test.js`):
+                *   Success case: Valid registration data
+                *   Failure cases: Invalid email, short password, duplicate email
+            *   ✅ Login flow tests (`features/auth/login.test.js`):
+                *   Success case: Valid credentials, JWT token
+                *   Failure cases: Invalid credentials
+            *   ✅ Protected routes tests:
+                *   Valid token authentication
+                *   Invalid/expired token handling
+        *   **1.5.5: Booking Feature Integration Tests (1 day)**
+            *   ✅ Slot availability tests (`features/booking/availability.test.js`):
+                *   List available slots
+                *   Filter slots by date/capacity
+            *   ✅ Booking creation tests (`features/booking/create.test.js`):
+                *   Success case: Valid booking
+                *   Failure cases: Full capacity, existing booking
+            *   ✅ Booking cancellation tests (`features/booking/cancel.test.js`):
+                *   Success case: Valid cancellation
+                *   Failure cases: Invalid slot, unauthorized
+        *   **1.5.6: Test Coverage and Documentation (0 days)**
+            *   ✅ Configure Jest coverage reporting
+            *   ✅ Set coverage targets:
+                *   Auth flows: 100% path coverage
+                *   Booking flows: 90%+ path coverage
+            *   ✅ Add npm scripts:
+                ```json
+                {
+                  "scripts": {
+                    "test": "jest",
+                    "test:unit": "jest tests/unit",
+                    "test:integration": "jest tests/integration",
+                    "test:coverage": "jest --coverage"
+                  }
+                }
+                ```
 
 ## Phase 2: Booking Functionality (Estimated Time: 1 week)
 
@@ -111,10 +159,16 @@ This document outlines the plan for implementing the backend of the football slo
 | Task 1.2 | ✅ Complete | Database models and connection configured |
 | Task 1.3 | ✅ Complete | Authentication system implemented with tests |
 | Task 1.4 | ✅ Complete | Basic slot management implemented with tests |
-| Task 1.5 | 🔲 To Do | Integration tests setup and implementation |
-| Task 2.1 | 🔲 To Do |  |
-| Task 2.2 | 🔲 To Do |  |
-| Task 2.3 | 🔲 To Do |  |
+| Task 1.5 | ⏳ In Progress | Integration tests setup and implementation |
+| Task 1.5.1 | ✅ Complete | Test environment setup |
+| Task 1.5.2 | ✅ Complete | Test directory structure and global setup |
+| Task 1.5.3 | ✅ Complete | Test utilities and fixtures implemented |
+| Task 1.5.4 | ✅ Complete | Auth feature integration tests implemented |
+| Task 1.5.5 | ✅ Complete | Booking feature integration tests implemented |
+| Task 1.5.6 | ✅ Complete | Test coverage and documentation |
+| Task 2.1 | 🔲 To Do | Implement booking a slot |
+| Task 2.2 | 🔲 To Do | Implement viewing user bookings |
+| Task 2.3 | 🔲 To Do | Implement canceling a booking |
 | Task 3.1 | ⏳ In Progress | Model validation complete, request validation in progress |
 | Task 3.2 | ⏳ In Progress | Error handling implemented for auth |
 | Task 3.3 | ✅ Complete | Auth and booking tests implemented |

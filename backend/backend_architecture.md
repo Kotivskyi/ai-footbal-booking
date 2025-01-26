@@ -244,71 +244,90 @@ Utility functions provide reusable helper functions for common tasks.
 
 ## 7. Testing Strategy
 
-### Test Environment
+Testing is crucial for ensuring the reliability and correctness of the backend application. We employ a two-pronged approach with unit tests and integration tests.
 
+### 7.1. Unit Tests
+
+Unit tests focus on verifying the logic of individual, isolated components.
+
+*   **Purpose**:
+    *   Validate the business logic within services, models, and utility functions in isolation.
+    *   Ensure that each component functions correctly independently.
+    *   Enable rapid feedback during development by quickly testing code changes.
+*   **Scope**:
+    *   Test individual functions or methods within modules.
+    *   Mock dependencies (e.g., database interactions, external APIs) to isolate the component under test.
+    *   Focus on testing logic, algorithms, and edge cases within the component.
+*   **Location**:
+    *   Unit tests are located in the `tests/unit/` directory, mirroring the `src/` directory structure.
+    *   For example, unit tests for services are in `tests/unit/services/`, and for models in `tests/unit/models/`.
+*   **Example Components to Unit Test**:
+    *   Service layer functions (e.g., `authService.registerUser`, `bookingService.getAvailableSlots`).
+    *   Model validation logic and custom methods.
+    *   Utility functions (e.g., API response helpers).
+    *   Middleware functions (in isolation, testing specific logic).
+*   **Tools and Techniques**:
+    *   **Test Runner**: Jest.
+    *   **Mocking**: Jest's mocking capabilities to isolate components.
+    *   **Assertion Library**: Jest's built-in `expect`.
+
+### 7.2. Integration Tests
+
+Integration tests verify the interactions between different components and layers of the application, ensuring they work together correctly.
+
+*   **Purpose**:
+    *   Validate the data flow and interactions between controllers, services, models, and middleware.
+    *   Ensure that different parts of the application integrate seamlessly.
+    *   Test real database interactions using MongoDB Memory Server.
+    *   Verify end-to-end functionality for key features (e.g., user registration, booking flow).
+*   **Scope**:
+    *   Test interactions between controllers and services.
+    *   Test interactions between services and models, including database operations.
+    *   Test API endpoints, encompassing routes, controllers, middleware, services, and models.
+    *   Focus on testing complete user flows and feature functionality.
+*   **Location**:
+    *   Integration tests are located in the `tests/integration/` directory.
+    *   Organized by feature within `tests/integration/features/` (e.g., `auth/`, `booking/`).
+    *   Setup and utility files are in `tests/integration/setup/`, `tests/integration/helpers/`, and `tests/integration/fixtures/`.
+*   **Structure**:
+    ```
+    tests/integration/
+    ├── setup/           # Global test setup/teardown (setup.js, teardown.js)
+    ├── fixtures/        # Test data (users.js, slots.js)
+    ├── helpers/         # Test utilities (database.js, request.js)
+    └── features/        # Feature-based test suites
+        ├── auth/        # Auth feature tests (register.test.js, login.test.js)
+        └── booking/     # Booking feature tests (availability.test.js, create.test.js, cancel.test.js)
+    ```
+*   **Key Components**:
+    *   **Test Runner**: Jest.
+    *   **HTTP Client**: Supertest (for API endpoint testing).
+    *   **Test Database**: MongoDB Memory Server (for real database interactions).
+    *   **Assertion Library**: Jest's built-in `expect`.
+    *   **Test Helpers**:
+        *   `database.js`: Utilities for database seeding, clearing, and setup.
+        *   `request.js`: Wrapper around Supertest to simplify API requests and handle authentication.
+    *   **Test Fixtures**:
+        *   `users.js`: Predefined user data for tests.
+        *   `slots.js`: Predefined slot data for tests.
+
+### 7.3. Test Environment
 ✅ Jest configured as test runner
 ✅ MongoDB Memory Server for isolated testing
 ✅ Environment-specific test configuration
 ✅ Custom test timeouts and options
 
-### Test Architecture
+### 7.4. Test Coverage
+*   Track coverage using Jest coverage reports (`npm run test:coverage`).
+*   Aim for:
+    *   100% path coverage for critical auth flows.
+    *   90%+ path coverage for core booking flows.
+    *   Coverage should focus on business logic and critical paths.
 
-1. **Unit Tests**
-    - Test individual components in isolation
-    - Mock dependencies and external services
-    - Focus on business logic and edge cases
-    - Components:
-        - ✅ Model validation tests
-        - ✅ Service layer tests
-        - ✅ Controller logic tests
-        - ✅ Utility function tests
-        - ✅ Middleware tests
-
-2. **Integration Tests**
-    - Test component interactions and data flow
-    - Components:
-        ```
-        tests/
-        ├── unit/
-        │   ├── models/
-        │   ├── services/
-        │   └── controllers/
-        └── integration/
-            ├── setup/
-            │   ├── setup.js         # Global test setup
-            │   └── teardown.js      # Global test cleanup
-            ├── fixtures/
-            │   ├── users.js         # Test data
-            │   └── slots.js         # Test data
-            ├── helpers/
-            │   ├── database.js      # DB utilities
-            │   └── request.js       # API request utilities
-            └── features/
-                ├── auth/
-                │   ├── register.test.js
-                │   └── login.test.js
-                └── booking/
-                    ├── availability.test.js
-                    ├── create.test.js
-                    └── cancel.test.js
-        ```
-    - Key Components:
-        - Test Runner (Jest)
-        - HTTP Client (Supertest)
-        - Test Database (MongoDB Memory Server)
-        - Assertion Library
-        - Setup/Teardown Scripts
-
-3. **Test Coverage**
-    - Track with Jest coverage reports
-    - Run with: `npm run test:coverage`
-
-### Test Commands
-```bash
-npm test              # Run all tests
-npm run test:unit     # Run unit tests only
-npm run test:int      # Run integration tests only
-npm run test:coverage # Generate coverage report
-```
+### 7.5. Test Commands
+npm test                  # Run all tests (unit and integration)
+npm run test:unit         # Run unit tests only
+npm run test:integration    # Run integration tests only
+npm run test:coverage       # Generate coverage report
 
 

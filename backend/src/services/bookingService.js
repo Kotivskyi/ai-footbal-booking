@@ -1,4 +1,4 @@
-const Slot = require('../models/Slot');
+const Slot = require('../models/slot.model');
 
 const getAvailableSlots = async () => {
   try {
@@ -22,7 +22,7 @@ const getAvailableSlots = async () => {
       { $sort: { date: 1, time: 1 } }
     ]);
   } catch (error) {
-    throw new Error('Error fetching available slots: ' + error.message);
+    throw error;
   }
 };
 

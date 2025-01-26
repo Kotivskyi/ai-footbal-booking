@@ -3,7 +3,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authService = require('../../services/authService');
-const User = require('../../models/User');
+const User = require('../../models/user.model');
 
 describe('Auth Service', () => {
     let mongoServer;
@@ -53,31 +53,22 @@ describe('Auth Service', () => {
     describe('loginUser', () => {
         beforeEach(async () => {
             process.env.JWT_SECRET = 'test-secret';
+            // Create user properly through the model to trigger password hashing
+            await User.create({
+                email: 'test@test.com',
+                password: 'password123'
+            });
         });
 
         it('should login user successfully', async () => {
-            const userData = {
-                email: 'test@test.com',
-                password: 'password123'
-            };
-
-            await authService.registerUser(userData.email, userData.password);
-            const result = await authService.loginUser(userData.email, userData.password);
-
+            const result = await authService.loginUser('test@test.com', 'password123');
             expect(result.token).toBeDefined();
-            expect(result.user.email).toBe(userData.email);
+            expect(result.user.email).toBe('test@test.com');
         });
 
         it('should not login with incorrect password', async () => {
-            const userData = {
-                email: 'test@test.com',
-                password: 'password123'
-            };
-
-            await authService.registerUser(userData.email, userData.password);
-
             await expect(
-                authService.loginUser(userData.email, 'wrongpassword')
+                authService.loginUser('test@test.com', 'wrongpassword')
             ).rejects.toThrow('Invalid credentials');
         });
 

@@ -30,12 +30,15 @@
     "supertest": "^7.0.0"
   },
   "jest": {
+    "globalSetup": "<rootDir>/src/tests/integration/setup/setup.js",
+    "globalTeardown": "<rootDir>/src/tests/integration/setup/teardown.js",
     "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/**/*.test.js"
+    "testPathIgnorePatterns": ["/node_modules/"],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/tests/"
     ],
-    "setupFiles": [
-      "dotenv/config"
-    ]
+    "verbose": true,
+    "testTimeout": 15000
   }
 }
