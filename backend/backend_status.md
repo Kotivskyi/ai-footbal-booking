@@ -31,27 +31,6 @@ This document outlines the plan for implementing the backend of the football slo
         *   ✅ Implement logic in `bookingController` to fetch slots
         *   ✅ Implement `getAvailableSlots` in `bookingService` using MongoDB aggregation
     *   ✅ Add unit tests for booking functionality
-*   **Task 1.5: Integration Testing Setup (5 days)**
-        *   Set up test environment:
-            *   Refector testing directory structure according to Test Architecture of @backend_architecture.md
-            *   Configure MongoDB Memory Server for test database
-            *   Set up test environment configurations
-        *   Implement test utilities:
-            *   Database helpers for test data management
-            *   HTTP request helpers using Supertest
-            *   Test fixtures for users and slots
-        *   Implement auth flow integration tests:
-            *   ⏳ Registration tests (success/failure cases)
-            *   ⏳ Login tests with token verification
-            *   🔲 Protected routes authentication tests
-        *   Implement booking flow tests:
-            *   🔲 Slot listing and filtering tests
-            *   🔲 Booking creation and validation tests
-            *   🔲 Booking management operation tests
-        *   Implement error handling tests:
-            *   🔲 Input validation scenarios
-            *   �� Authorization edge cases
-            *   🔲 Concurrent operation handling
 
 ## Phase 2: Booking Functionality (Estimated Time: 1 week)
 
@@ -63,6 +42,23 @@ This document outlines the plan for implementing the backend of the football slo
         *   Check slot availability (capacity).
         *   Check if the user has an existing booking.
         *   Update the `Slot` document (add user to `bookedBy`).
+    *   **Acceptance Criteria:**
+        *   **Successful Booking:** A user can successfully book an available slot.
+            *   When a user books a slot, their `userId` is added to the `bookedBy` array of the corresponding `Slot` document in the database.
+            *   The booking endpoint returns a success status code (e.g., 200 OK or 201 Created) and a confirmation message or the updated `Slot` information.
+        *   **Slot Capacity Limit:**  Users cannot book a slot if it is already at full capacity.
+            *   If a user attempts to book a slot that is full, the booking endpoint returns an appropriate error status code (e.g., 400 Bad Request or 409 Conflict) and an error message indicating that the slot is full.
+        *   **Duplicate Booking Prevention:** A user cannot book the same slot more than once.
+            *   If a user attempts to book a slot they have already booked, the booking endpoint returns an appropriate error status code (e.g., 400 Bad Request or 409 Conflict) and an error message indicating that the user already has a booking for this slot.
+        *   **Authentication and Authorization:** The booking route is protected by `authMiddleware`.
+            *   Only authenticated users can access the booking route. Unauthenticated users should receive a 401 Unauthorized error.
+        *   **Input Validation:** The booking endpoint validates the request body.
+            *   The endpoint expects a valid `slotId` in the request. Invalid or missing `slotId` should result in a 400 Bad Request error.
+        *   **Error Handling:** The application handles errors gracefully.
+            *   In case of any server errors or database issues during the booking process, the endpoint returns an appropriate error status code (e.g., 500 Internal Server Error) and a user-friendly error message.
+        *   **Logging:**  Detailed logs are recorded for booking attempts (successful and failed).
+            *   Logs should include relevant information such as user ID, slot ID, timestamp, and the outcome of the booking attempt (success or failure with error details). Use trace, debug, error, and critical log levels as appropriate.
+        *   **Unit and Integration Tests:** Unit tests are implemented for the `bookSlot` service function, and integration tests are implemented for the booking endpoint to ensure the booking logic works as expected.
 *   **Task 2.2: Implement Viewing User Bookings (2 days)**
     *   Implement logic in `bookingController`:
         *   Define route in `bookingRoutes.js` (protected by `authMiddleware`).
